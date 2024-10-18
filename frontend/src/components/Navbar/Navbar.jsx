@@ -6,7 +6,7 @@ import { assets } from '../../assets/assets'
 
 const Navbar = () => {
 
-  const [menu,setMenu] = useState("mobile-app");
+  const [menu,setMenu] = useState("home");
 
 
 
