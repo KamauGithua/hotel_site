@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react'
 import './LoginPopup.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../context/StoreContext'
@@ -22,53 +22,37 @@ const LoginPopup = ({setShowLogin}) => {
     }
 
     const onLogin = async (event) => {
-      event.preventDefault();
+      event.preventDefault()
       let newUrl = url;
       if (currState === "Login") {
-        newUrl += "/api/user/login";
+        newUrl += "/api/user/login"
       }
       else{
         newUrl += "/api/user/register";
       }
 
-       // Check if name is provided for registration
-       if (currState === "Sign Up" && !data.name) {
-        alert("Name is required for registration.");
-        return; // Prevent submission
-    }
+      const response = await axios.post(newUrl,data);
 
-
-
-
-    try {
-        console.log("API URL:", newUrl);
-        console.log("Data sent:", data);
-
-
-    const response = await axios.post(newUrl,data);
-    console.log("Response from server:", response.data); // Add this line to log the response
-    
-    if (response.data.success) {
-      console.log("Received token:", response.data.token); // Log the token separately
-      setToken(response.data.token);
-      localStorage.setItem("token",response.data.token);
-      setShowLogin(false)
-    }
-    else{
-      alert(response.data.message);
-    }
+      if (response.data.success) {
+        setToken(response.data.token);
+        localStorage.setItem("token",response.data.token);
+        setShowLogin(false)
+      }
+      else{
+        alert(response.data.message)
+      }
 
     }
-  
-  catch(error) {
-    console.log("Error during form submission:", error.response || error);
-    alert("Failed to SubmitEvent. Please try again.");
-  }
-};
+
+
+
+
+
+   
+
 
     
-
-  return (
+return (
     <div className='login-popup'>
       <form onSubmit={onLogin} className="login-popup-container">
         <div className="login-popup-title">
@@ -76,11 +60,8 @@ const LoginPopup = ({setShowLogin}) => {
             <img onClick={()=>setShowLogin(false)} src={assets.cross_icon} alt="" />
         </div>
         <div className="login-popup-inputs">
-            
             {currState==="Login"?<></>:<input name='name' onChange={onChangeHandler} value={data.name} type="text" placeholder='Your name' required />}
-            {/* {currState==="Login"? null: */}
-            <input name='name' onChange={onChangeHandler} value={data.name} type="text" placeholder='Your name' required />
-           <input name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Your email' required />
+            <input name='email' onChange={onChangeHandler} value={data.email}  type="email" placeholder='Your email' required />
             <input name='password' onChange={onChangeHandler} value={data.password} type="password" placeholder='Password' required />
         </div>
         <button type='submit'>{currState==="Sign Up"?"Create account":"Login"}</button>
