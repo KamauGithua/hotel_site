@@ -3,7 +3,7 @@ import cors from "cors"
 import { connectDB } from "./config/db.js"
 import foodRouter from "./routes/foodRoute.js"
 import userRouter from "./routes/userRoute.js"
-
+import dotenv from "dotenv"
 
 // app config
 const app = express()
@@ -15,6 +15,8 @@ app.use(cors())
 
 // DB Connection
 connectDB();
+
+dotenv.config();
 
 // api endpoints
 app.use("/api/food",foodRouter)

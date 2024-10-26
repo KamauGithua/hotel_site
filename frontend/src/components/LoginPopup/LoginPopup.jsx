@@ -30,27 +30,39 @@ const LoginPopup = ({setShowLogin}) => {
       else{
         newUrl += "/api/user/register";
       }
+
+       // Check if name is provided for registration
+       if (currState === "Sign Up" && !data.name) {
+        alert("Name is required for registration.");
+        return; // Prevent submission
+    }
+
+
+
+
     try {
         console.log("API URL:", newUrl);
         console.log("Data sent:", data);
 
 
     const response = await axios.post(newUrl,data);
+    console.log("Response from server:", response.data); // Add this line to log the response
     
     if (response.data.success) {
+      console.log("Received token:", response.data.token); // Log the token separately
       setToken(response.data.token);
       localStorage.setItem("token",response.data.token);
       setShowLogin(false)
     }
     else{
-      alert(response.data.message)
+      alert(response.data.message);
     }
 
     }
   
   catch(error) {
-    console.log("Error during form submission:", error);
-    alert("Failed to SubmitEvent. Please try again. ")
+    console.log("Error during form submission:", error.response || error);
+    alert("Failed to SubmitEvent. Please try again.");
   }
 };
 
@@ -66,7 +78,9 @@ const LoginPopup = ({setShowLogin}) => {
         <div className="login-popup-inputs">
             
             {currState==="Login"?<></>:<input name='name' onChange={onChangeHandler} value={data.name} type="text" placeholder='Your name' required />}
-            <input name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Your email' required />
+            {/* {currState==="Login"? null: */}
+            <input name='name' onChange={onChangeHandler} value={data.name} type="text" placeholder='Your name' required />
+           <input name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Your email' required />
             <input name='password' onChange={onChangeHandler} value={data.password} type="password" placeholder='Password' required />
         </div>
         <button type='submit'>{currState==="Sign Up"?"Create account":"Login"}</button>
